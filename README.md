@@ -20,6 +20,6 @@ An unsupervised deep autoencoder is trained on engineered features (IV, delta, g
 See `requirements.txt`
 
 ## Status
-🔧 In development. First milestone: model training + detection logic
+🔧 To run just clone this and run the run.py 
 
 ---
