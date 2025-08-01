@@ -5,7 +5,7 @@ matplotlib
 seaborn
 tensorflow
 keras
-ta-lib
+ta
 yfinance
 joblib
 tqdm
