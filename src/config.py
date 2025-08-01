@@ -1,5 +1,3 @@
-# config.py
-
 from datetime import date
 
 # Paths
@@ -8,26 +6,32 @@ MODEL_SAVE_PATH = "./results/model_weights/"
 REPORTS_PATH = "./results/reports/"
 
 # Ticker configuration (used for sources like yfinance)
-TICKER = "NVDA"  # You mentioned you're trying for NVIDIA
+TICKER = "TSLA"  # NVIDIA ticker
 
-# Option chain parameters (for yfinance, optional)
+# Option chain parameters (for yfinance)
 OPTION_PARAMS = {
     "option_type": "calls",  # "calls" or "puts"
-    "expiry_index": 0,       # Index of expiry from available expiries
+    "expiry_index": 0,       # Only used if not specifying expiry directly
 }
 
-# Optional date range for generating reports, archival etc.
+# Date range for fetching historical price data and reports
 DATE_RANGE = {
-    "start": date(2023, 12, 1),
-    "end": date(2023, 12, 28),
+    "start": date(2025, 7, 1),
+    "end": date(2025, 8, 1),
 }
 
 # Main market data fetch configuration
 MARKET_PARAMS = {
-    'symbol': 'NVDA',                     # Change to 'NIFTY' for NSE source
-    'start': date(2025, 7, 1),            # Historical data fetch start
-    'end': date(2025, 8, 1),              # Historical data fetch end
-    'option_type': 'call',                # 'call' or 'put'
-    'strike_price': None,                 # Optional filter for strike
-    'expiry_date': date(2025, 8, 1),      # Specific expiry to filter
+    'symbol': 'TSLA',  # Dow Jones Industrial Average
+    'start': DATE_RANGE["start"],
+    'end': DATE_RANGE["end"],
+    'option_type': 'call',           # 'call' or 'put'
+    'strike_price': None,            # Optional: set a fixed strike to filter
+    'expiry_dates': [                # 🔁 List of expiry dates to process
+        date(2025, 8, 1),
+        date(2025, 8, 8),
+        date(2025, 8, 15),
+        date(2025, 8, 22),
+        date(2025, 8, 29),
+    ]
 }

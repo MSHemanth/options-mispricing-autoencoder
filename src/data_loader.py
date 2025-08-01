@@ -1,7 +1,7 @@
 import yfinance as yf
 import pandas as pd
 from datetime import date, datetime
-from config import MARKET_PARAMS
+from src.config import MARKET_PARAMS
 import os
 import numpy as np
 
@@ -35,7 +35,13 @@ def save_to_csv(df, path):
 
 def main():
     symbol = MARKET_PARAMS['symbol']
-    expiry = MARKET_PARAMS['expiry_date'].strftime('%Y-%m-%d')
+    for expiry_date in MARKET_PARAMS['expiry_dates']:
+        expiry = expiry_date.strftime('%Y-%m-%d')
+
+        # ⬇️ Now put the rest of your logic here
+        print(f"Processing expiry: {expiry}")
+        # e.g. fetch option chain, prepare data, run model, etc.
+
     print(f"[INFO] Using expiry: {expiry}")
 
     raw_df = fetch_option_chain(symbol, expiry)

@@ -1,6 +1,6 @@
 import pandas as pd
 from datetime import datetime
-from config import DATA_PATH, MARKET_PARAMS
+from src.config import DATA_PATH, MARKET_PARAMS
 import yfinance as yf
 from pathlib import Path
 
@@ -65,7 +65,7 @@ def get_feature_matrix(df):
                'mid_price', 'volume', 'openInterest']].values
 
 
-if __name__ == "__main__":
+def generate_features():
     df = load_cleaned_data().copy()
     spot_price = get_spot_price(MARKET_PARAMS['symbol'])
     print(f"[INFO] Using spot price: {spot_price}")
@@ -84,4 +84,4 @@ if __name__ == "__main__":
     X = get_feature_matrix(df_feat)
     print("[INFO] Feature matrix shape:", X.shape)
     print("[INFO] First 5 rows:\n", X[:5])
-
+    return X, df_feat

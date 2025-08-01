@@ -7,7 +7,9 @@ import numpy as np
 from src.data_loader import main
 main()  # Ensure cleaned data is available
 
-from 
+from src.features import generate_features
+# Generate features and save to CSV
+X, df_feat = generate_features()    
 
 df = pd.read_csv("data/processed/features.csv")
 
@@ -30,7 +32,7 @@ autoencoder.fit(X_real, X_real, epochs=50, batch_size=32, verbose=1)
 price_index = df_numeric.columns.get_loc('mid_price')
 
 mispricing_flags, price_residual = detect_mispricing(
-    autoencoder, X_real, price_index=price_index, threshold=0.02
+    autoencoder, X_real, price_index=price_index, threshold=0.1
 )
 
 # Save results with mispricing info
@@ -39,3 +41,7 @@ df['is_mispriced'] = mispricing_flags.astype(int)
 df.to_csv("data/processed/mispricing_results.csv", index=False)
 
 print("[INFO] Mispricing detection complete. Results saved to 'data/processed/mispricing_results.csv'.")
+
+from plot_results import plot_results
+# Plot the results
+plot_results()
