@@ -1,28 +1,41 @@
-from src.detect import detect_mispricing
-
 from src.model import build_autoencoder
 from src.detect import detect_mispricing
 import pandas as pd
 import numpy as np
 
 # Load and clean feature data
+from src.data_loader import main
+main()  # Ensure cleaned data is available
+
+from 
+
 df = pd.read_csv("data/processed/features.csv")
 
-# Drop any non-numeric columns (e.g., date, symbol, etc.)
-df_numeric = df.select_dtypes(include=[np.number])
+# Drop non-numeric and label columns (keep only features)
+drop_cols = ['price_residual', 'is_mispriced'] if 'price_residual' in df.columns else []
+df_numeric = df.select_dtypes(include=[np.number]).drop(columns=drop_cols, errors='ignore')
 
-# Drop rows with NaNs, if any
+# Drop rows with missing values
 df_numeric = df_numeric.dropna()
 
 # Convert to numpy float32 array
 X_real = df_numeric.astype(np.float32).values
 
+# Build and train the autoencoder
 autoencoder = build_autoencoder(input_dim=X_real.shape[1], encoding_dim=4)
 autoencoder.fit(X_real, X_real, epochs=50, batch_size=32, verbose=1)
 
-mispricing_flags, price_residual = detect_mispricing(autoencoder, X_real, price_index=-1, threshold=0.02)
+# Detect mispricing (assuming 'mid_price' is the last feature in the dataset)
+# You can also explicitly pass its index using: df_numeric.columns.get_loc('mid_price')
+price_index = df_numeric.columns.get_loc('mid_price')
 
-df_numeric['price_residual'] = price_residual
-df_numeric['is_mispriced'] = mispricing_flags
-df_numeric.to_csv("data/processed/mispricing_results.csv", index=False)
-print("[INFO] Mispricing detection complete. Results saved to 'mispricing_results.csv'.")
+mispricing_flags, price_residual = detect_mispricing(
+    autoencoder, X_real, price_index=price_index, threshold=0.02
+)
+
+# Save results with mispricing info
+df['price_residual'] = price_residual
+df['is_mispriced'] = mispricing_flags.astype(int)
+df.to_csv("data/processed/mispricing_results.csv", index=False)
+
+print("[INFO] Mispricing detection complete. Results saved to 'data/processed/mispricing_results.csv'.")
