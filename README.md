@@ -1,10 +1,10 @@
-# 📉 Options Mispricing Detection using Deep Autoencoders
+# Options Mispricing Detection using Deep Autoencoders
 
 This project aims to detect mispriced **Nifty** and **BankNifty** options contracts using a machine learning pipeline built on **deep autoencoders**. It leverages data from the Indian derivatives market to construct a fair-pricing structure and flags anomalies through unsupervised learning.
 
 ---
 
-## 🎯 Project Goals
+## Project Goals
 
 - Learn the latent structure of fairly priced options using deep learning
 - Detect anomalies (i.e., mispricings) via reconstruction error
@@ -12,7 +12,7 @@ This project aims to detect mispriced **Nifty** and **BankNifty** options contra
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```bash
 options-mispricing/
@@ -39,9 +39,9 @@ options-mispricing/
 
 ---
 
-## 🧾 Pipeline Summary
+## Pipeline Summary
 
-### 1️⃣ `fetch_and_clean.py` – *Fetch Raw Option Chain & Clean*
+### `fetch_and_clean.py` – *Fetch Raw Option Chain & Clean*
 
 * Downloads **Call option chains** from Yahoo Finance via `nsepy`
 * Filters out:
@@ -52,7 +52,7 @@ options-mispricing/
 * Combines all expiries into a single file
 * ⏎ **Output:** `data/processed/cleaned_options_all_expiries.csv`
 
-### 2️⃣ `feature_engineering.py` – *Add Predictive Features*
+### `feature_engineering.py` – *Add Predictive Features*
 
 * Loads cleaned data and adds features for modeling:
 
@@ -60,14 +60,14 @@ options-mispricing/
   * Time to expiry
   * Bid/ask mid price (used as label)
   * Ratios like IV/Open Interest
-* ⏎ **Output:** `data/processed/features.csv`
+* **Output:** `data/processed/features.csv`
 
-### 3️⃣ `build_autoencoder.py` – *Train Pricing Model*
+### `build_autoencoder.py` – *Train Pricing Model*
 
 Trains an unsupervised deep autoencoder on engineered features.
 The objective is to learn the structure of valid options pricing relationships.
 
-#### 🔧 Model Details:
+#### Model Details:
 
 * Architecture:
 
@@ -82,10 +82,10 @@ The objective is to learn the structure of valid options pricing relationships.
 
   * Dropout or L2 (optional)
 
-🧠 **Interpretation**:
+**Interpretation**:
 If the model struggles to reconstruct a given option's features (i.e., high reconstruction error), the contract is potentially mispriced relative to the historical pricing structure.
 
-### 4️⃣ `detect_mispricing.py` – *Flag Anomalies*
+### `detect_mispricing.py` – *Flag Anomalies*
 
 Loads the trained autoencoder and:
 
@@ -103,7 +103,7 @@ Loads the trained autoencoder and:
 
 ---
 
-## 🧠 Engineered Features Explained
+## Engineered Features Explained
 
 | Feature             | Description                                           |
 | ------------------- | ----------------------------------------------------- |
@@ -119,7 +119,7 @@ Loads the trained autoencoder and:
 
 ---
 
-## 💡 What is Moneyness?
+## What is Moneyness?
 
 **Moneyness** indicates how far the strike price is from the current spot price. It helps standardize options across different strikes:
 
@@ -134,7 +134,7 @@ This helps autoencoders generalize across different market regimes.
 
 ---
 
-## 🧪 Model Usage Summary
+## Model Usage Summary
 
 ```bash
 # Step 1: Run full pipeline
@@ -149,7 +149,7 @@ python src/detect_mispricing.py
 
 ---
 
-## 📈 Output Logs
+## Output Logs
 
 * `results/autoencoder_model.h5`: Trained model weights
 * `results/scaler.pkl`: MinMaxScaler used for normalization
@@ -157,7 +157,7 @@ python src/detect_mispricing.py
 
 ---
 
-## ⚠️ Assumptions & Limitations
+## Assumptions & Limitations
 
 * Only **Call options** are used for now (Puts can be added similarly)
 * Spot price is taken live at feature generation time
@@ -166,7 +166,7 @@ python src/detect_mispricing.py
 
 ---
 
-## 📚 References
+## References
 
 * [NSE Derivatives Market](https://www.nseindia.com/products-services/equity-derivatives)
 * [Options Pricing & Greeks](https://en.wikipedia.org/wiki/Options_greeks)
@@ -175,7 +175,7 @@ python src/detect_mispricing.py
 
 ---
 
-## 👨‍💻 Author
+## Author
 
 **Hemanth Madduri**
 Aerospace Engineer @ IIT Madras
@@ -183,7 +183,7 @@ Aerospace Engineer @ IIT Madras
 
 ---
 
-## 🛠 Requirements
+## Requirements
 
 ```bash
 pip install -r requirements.txt
