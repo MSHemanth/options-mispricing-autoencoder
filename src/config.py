@@ -16,8 +16,8 @@ OPTION_PARAMS = {
 
 # Date range for fetching historical price data and reports
 DATE_RANGE = {
-    "start": date(2025, 7, 1),
-    "end": date(2025, 8, 1),
+    "start": date(2025, 7, 31),
+    "end": date(2025, 8, 29),
 }
 
 # Main market data fetch configuration
@@ -28,7 +28,6 @@ MARKET_PARAMS = {
     'option_type': 'call',           # 'call' or 'put'
     'strike_price': None,            # Optional: set a fixed strike to filter
     'expiry_dates': [                # 🔁 List of expiry dates to process
-        date(2025, 8, 1),
         date(2025, 8, 8),
         date(2025, 8, 15),
         date(2025, 8, 22),

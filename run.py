@@ -11,7 +11,8 @@ from src.features import generate_features
 # Generate features and save to CSV
 X, df_feat = generate_features()    
 
-df = pd.read_csv("data/processed/features.csv")
+# df = pd.read_csv("data/processed/features.csv")
+df = df_feat.copy()  # Use the generated features DataFrame
 
 # Drop non-numeric and label columns (keep only features)
 drop_cols = ['price_residual', 'is_mispriced'] if 'price_residual' in df.columns else []

@@ -35,28 +35,38 @@ def save_to_csv(df, path):
 
 def main():
     symbol = MARKET_PARAMS['symbol']
+    all_cleaned_data = []
+
     for expiry_date in MARKET_PARAMS['expiry_dates']:
         expiry = expiry_date.strftime('%Y-%m-%d')
+        print(f"[INFO] Processing expiry: {expiry}")
 
-        # ⬇️ Now put the rest of your logic here
-        print(f"Processing expiry: {expiry}")
-        # e.g. fetch option chain, prepare data, run model, etc.
+        # Fetch option chain for current expiry
+        raw_df = fetch_option_chain(symbol, expiry)
+        print(f"[INFO] Raw options count for {expiry}: {len(raw_df)}")
 
-    print(f"[INFO] Using expiry: {expiry}")
+        # Preprocess and annotate expiry
+        cleaned_df = preprocess_options_data(raw_df,
+                                             min_volume=1,
+                                             require_bid_ask=True,
+                                             otm_only=True)
+        cleaned_df['expiry'] = expiry  # Add expiry as a new column
+        print(f"[INFO] Filtered options count for {expiry}: {len(cleaned_df)}")
 
-    raw_df = fetch_option_chain(symbol, expiry)
-    print(f"[INFO] Raw options count: {len(raw_df)}")
+        all_cleaned_data.append(cleaned_df)
 
-    cleaned_df = preprocess_options_data(raw_df,
-                                         min_volume=1,
-                                         require_bid_ask=True,
-                                         otm_only=True)
-    print(f"[INFO] Filtered options count: {len(cleaned_df)}")
-    print(cleaned_df.head())
+    # Combine all expiries
+    if all_cleaned_data:
+        combined_df = pd.concat(all_cleaned_data, ignore_index=True)
+        print(f"[INFO] Total cleaned options across expiries: {len(combined_df)}")
+        print(combined_df.head())
 
-    # Optional: Save cleaned data
-    save_path = "./data/processed/cleaned_options.csv"
-    save_to_csv(cleaned_df, save_path)
+        # Save to a single CSV
+        save_path = "./data/processed/cleaned_options.csv"
+        save_to_csv(combined_df, save_path)
+    else:
+        print("[WARNING] No data collected. Exiting.")
+
 def compute_time_to_expiry(expiry_date_str: str) -> float:
     """Returns time to expiry in years."""
     expiry_date = pd.to_datetime(expiry_date_str)
